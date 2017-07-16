@@ -1,6 +1,6 @@
 from util import *
 
-for i in range(20,21):
+for i in range(num_of_images + 1):
 	ds = dicom.read_file("./images_to_read/test_" + str(i) + ".dcm")
 	img = ds.pixel_array # retrieve the image array
 
@@ -52,7 +52,7 @@ for i in range(20,21):
 
 
 	# None-zeros
-	# To find 
+	# To find all none zero fields in the image
 	rows, cols = np.nonzero(blobs_labels)
 	leftmost = cols.min()
 	rightmost = cols.max()
@@ -69,21 +69,18 @@ for i in range(20,21):
 
 	black_rect = make_rect(leftmost_z, upmost_z, w_z, h_z)
 
-
+        # save in connected components mode
 	save_image(blobs_labels, 
 		'nipy_spectral', './out_images/img'+str(i)+'_cct', rect=rect)
-
+        # save in final(original) mode
 	# save_image(ds.pixel_array, 
 	# 	pylab.cm.bone, './final_images/img_final_' + str(i), rect=black_rect)
 
-
+        # save in binary mode
 	#save_image(binary_global, None, './test_images/img' + str(i))
 
 	# plt.imshow(binary_global)
 	# plt.axis('off')
 
 
-	#plt.savefig('./test_images/img')
-	#plt.show()
-		# j += 100
 
