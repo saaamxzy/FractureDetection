@@ -1,7 +1,7 @@
 import os
 from shutil import copyfile
 
-PathDicom = '../Images/'
+PathDicom = './Images/'
 
 lstFilesDCM = []  # create an empty list
 c = 0

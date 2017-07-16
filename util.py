@@ -14,6 +14,8 @@ from scipy import misc
 import scipy.ndimage as ndimage
 import pylab
 
+num_of_images = 202
+
 def save_image(data, cm, fn, rect = None):
 	sizes = np.shape(data)
 	height = float(sizes[0])
