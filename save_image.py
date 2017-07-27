@@ -1,7 +1,8 @@
 from util import *
 
 if __name__ == '__main__':
-	for i in range(18,21):
+	f = open('image_means.txt', 'w')
+	for i in range(100):
 		print 'Working on # ' + str(i)
 		ds = dicom.read_file("./images_to_read/test_" + str(i) + ".dcm")
 		img = ds.pixel_array # retrieve the image array
@@ -18,22 +19,26 @@ if __name__ == '__main__':
 
 		# plt.imshow(img, interpolation='nearest', cmap=pylab.cm.bone)
 		# plt.savefig('./gaussian', bbox_inches='tight')
-
+		# f.write('\nimage number ' + str(i) + 'mean is: ' + str(np.mean(img)))
+		img_mean = np.mean(img)
 		global_thresh = threshold_otsu(img)
-		th = global_thresh
-		binary_global = img > th
+
+		if img_mean > 8000:
+			global_thresh = global_thresh * 0.8
+		binary_global = img > global_thresh
 
 		# fig, axes = plt.subplots(nrows=3, figsize=(7, 8))
 		# ax = axes.ravel()
 		plt.gray()
 
+		#save_image(binary_global, None, './test_images/img' + str(i))
 		# To find the leftmost, rightmost, upmost and downmost black pixel
 		rows_z, cols_z = np.where(binary_global == False)
 		leftmost_z = cols_z.min()
 		rightmost_z = cols_z.max()
 		upmost_z = rows_z.min()
 		downmost_z = rows_z.max()
-
+		print rightmost_z
 		# Debugging statements
 		# print binary_global
 		# print 'image dimension: ', binary_global.shape
@@ -41,24 +46,31 @@ if __name__ == '__main__':
 
 		# To crop out the unwanted white borders
 		h,w = binary_global.shape
-		x_offset = w // 4
+		x_offset = w // 6
+		if img_mean > 13000:
+			x_offset = w // 10
 		x_left_bound = w // 2 - x_offset
 		x_right_bound = w // 2 + x_offset
-		y_offset = h //4
+		print(x_right_bound)
+		y_offset = h // 6
+		if img_mean > 13000:
+			y_offset = h // 10
 		y_up_bound = h // 2 - y_offset
 		y_down_bound = h // 2 + y_offset
 
+
+
 		if not x_left_bound < leftmost_z < x_right_bound:
-			binary_global[0:h,0:leftmost_z+1] = False
+			binary_global[0:h,0:leftmost_z+25] = False
 		if not x_left_bound < rightmost_z < x_right_bound:
-			binary_global[0:h, rightmost_z-1:w] = False
+			binary_global[0:h, rightmost_z-25:w] = False
 		if not y_up_bound < upmost_z < y_down_bound:
-			binary_global[0:upmost_z+1, 0:w] = False
+			binary_global[0:upmost_z+25, 0:w] = False
 		if not y_up_bound < downmost_z < y_down_bound:
-			binary_global[downmost_z-1:h, 0:w] = False
+			binary_global[downmost_z-25:h, 0:w] = False
 
 		# Uncomment to see the binary image
-		# save_image(binary_global, None, './test_images/img' + str(i))
+		save_image(binary_global, None, './test_white_borders/img' + str(i))
 
 		mask = binary_global > 0.8 * binary_global.mean()
 
@@ -104,4 +116,5 @@ if __name__ == '__main__':
 		# plt.axis('off')
 		#plt.savefig('./test_images/img')
 		#plt.show()
+	f.close()
 
