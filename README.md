@@ -1,6 +1,9 @@
 # FractureDetection
 ## Introduction
 This program aims to propose a region of interest for radiologic diagnosis. To be more specific, for each input X-Ray image, it outputs a image with a region highlighted. That region is supposed to suggest useful region of an X-Ray(part that shows bone structures). This could be useful for deep learning purposes specialized in fracture detection networks.
+## Example outputs
+<img src="./ex1.png" width="200">
+<img src="./ex2.png" width="200">
 ## Required Environment
 Python 2.7
 Python packages:
